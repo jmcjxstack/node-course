@@ -1,7 +1,13 @@
 const { exec } = require("child_process");
 const os = require("os");
 
+function clearLine() {
+    process.stdout.moveCursor(0, -1);
+    process.stdout.clearLine(1);
+}
+
 function runCommand() {
+    clearLine();
     const isWindows = os.platform() === "win32";
 
     const command = isWindows
