@@ -19,8 +19,10 @@ function runCommand() {
             return;
         }
 
-        console.log(`Command output: ${stdout}`);
+        process.stdout.write(`Command output: ${stdout}\r\r`);
     });
 }
 
 runCommand();
+
+setInterval(runCommand, 2000);
