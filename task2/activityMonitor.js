@@ -15,10 +15,8 @@ function runCommand(command) {
         const currentTime = new Date().getTime();
         const logEntry = `${currentTime} : ${stdout.trim()}\n`;
 
-        // Clear the current line and print the new result
         process.stdout.write(`\r${stdout.trim()}`);
 
-        // Append the log entry to the file
         fs.appendFile("activityMonitor.log", logEntry, (err) => {
             if (err) {
                 console.error(
@@ -44,10 +42,8 @@ function main() {
         runCommand(command);
     }
 
-    // Run the command every second
     setInterval(runSystemCommand, 1000);
 
-    // Append to log file every minute
     setInterval(() => {
         const currentTime = new Date().getTime();
         const logEntry = `${currentTime} : Log entry from interval\n`;
@@ -59,7 +55,7 @@ function main() {
                 );
             }
         });
-    }, 60000); // 60,000 milliseconds = 1 minute
+    }, 60000);
 }
 
 main();
