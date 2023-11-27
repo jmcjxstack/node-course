@@ -1,19 +1,8 @@
-//TASK 1
-// const repl = require("repl");
-// repl.start();
-
-// function getRandomNumber() {
-//   console.log(Math.random());
-// }
-
-// getRandomNumber();
-/*
-
-*/
-//TASK 3.1
 import EventEmitter from "./task3/EventEmitter.js";
 import WithTime from "./task3/WithTime.js";
+import csvToJson from "./csvToJson.js";
 
+//TASK 3.1
 const myEmitter = new EventEmitter();
 
 function c1() {
@@ -76,4 +65,6 @@ withTime.execute(async () => {
 
 */
 //TASK 3.3
-
+//IMPORTANT: To test this task please check the existent csv file and
+//the txt that should be created in the folder task3 after running the following function
+csvToJson();
