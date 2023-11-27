@@ -10,58 +10,9 @@
 /*
 
 */
-//TASK3.1
-class EventEmitter {
-    constructor() {
-        this.listeners = {};
-    }
-
-    addListener(eventName, fn) {
-        this.listeners[eventName] = this.listeners[eventName] || [];
-        this.listeners[eventName].push(fn);
-    }
-
-    on(eventName, fn) {
-        this.addListener(eventName, fn);
-    }
-
-    removeListener(eventName, fn) {
-        if (this.listeners[eventName]) {
-            this.listeners[eventName] = this.listeners[eventName].filter(
-                (listener) => listener !== fn
-            );
-        }
-    }
-
-    off(eventName, fn) {
-        this.removeListener(eventName, fn);
-    }
-
-    once(eventName, fn) {
-        const onceWrapper = (...args) => {
-            fn(...args);
-            this.removeListener(eventName, onceWrapper);
-        };
-
-        this.addListener(eventName, onceWrapper);
-    }
-
-    emit(eventName, ...args) {
-        if (this.listeners[eventName]) {
-            for (const listener of this.listeners[eventName]) {
-                listener(...args);
-            }
-        }
-    }
-
-    listenerCount(eventName) {
-        return this.listeners[eventName] ? this.listeners[eventName].length : 0;
-    }
-
-    rawListeners(eventName) {
-        return this.listeners[eventName] || [];
-    }
-}
+//TASK 3.1
+import EventEmitter from "./task3/EventEmitter.js";
+import WithTime from "./task3/WithTime.js";
 
 const myEmitter = new EventEmitter();
 
@@ -111,4 +62,18 @@ console.log(myEmitter.listenerCount("eventOne"));
 /*
 
 */
-//TASK3.2
+//TASK 3.2
+const withTime = new WithTime();
+
+withTime.on("begin", () => console.log("About to execute"));
+withTime.on("end", () => console.log("Done with execute"));
+withTime.on("data", (data) => console.log("Data received:", data));
+
+withTime.execute(async () => {
+    return withTime.fetchData("https://jsonplaceholder.typicode.com/posts/1");
+});
+/*
+
+*/
+//TASK 3.3
+
