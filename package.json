@@ -4,11 +4,13 @@
   "description": "node.js course",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "test": "jest"
   },
   "author": "Jose Miguel Carvajal Jimenez",
   "license": "ISC",
   "devDependencies": {
+    "jest": "^29.7.0",
     "nodemon": "^3.0.1"
   },
   "dependencies": {
