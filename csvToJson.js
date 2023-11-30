@@ -1,10 +1,10 @@
-import { promises as fs } from "fs";
-import csvtojson from "csvtojson";
+const fs = require("fs").promises;
+const csvtojson = require("csvtojson");
 
 const csvFilePath = "./task3/csvdirectory.csv";
 const outputFilePath = "./task3/convertedData.txt";
 
-export default async function csvToJson() {
+async function csvToJson() {
     try {
         const jsonArray = await csvtojson({
             noheader: true,
@@ -28,3 +28,4 @@ export default async function csvToJson() {
     }
 }
 
+module.exports = csvToJson;

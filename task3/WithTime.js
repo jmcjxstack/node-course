@@ -1,7 +1,7 @@
-import EventEmitter from "./EventEmitter.js";
-import https from "https";
+const EventEmitter = require("./EventEmitter.js");
+const https = require("https");
 
-export default class WithTime extends EventEmitter {
+class WithTime extends EventEmitter {
     async execute(asyncFunc, ...args) {
         try {
             this.emit("begin");
@@ -42,3 +42,5 @@ export default class WithTime extends EventEmitter {
         });
     }
 }
+
+module.exports = WithTime;

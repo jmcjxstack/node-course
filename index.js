@@ -1,6 +1,6 @@
-import EventEmitter from "./task3/EventEmitter.js";
-import WithTime from "./task3/WithTime.js";
-import csvToJson from "./csvToJson.js";
+const EventEmitter = require("./task3/EventEmitter.js")
+const WithTime = require("./task3/WithTime.js")
+const csvToJson = require("./csvToJson.js")
 
 //TASK 3.1
 const myEmitter = new EventEmitter();

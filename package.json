@@ -1,6 +1,5 @@
 {
   "name": "node-course",
-  "type": "module",
   "version": "1.0.0",
   "description": "node.js course",
   "main": "index.js",
