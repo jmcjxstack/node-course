@@ -3,10 +3,10 @@ import {
     getListOfPublicHolidays,
     checkIfTodayIsPublicHoliday,
     getNextPublicHolidays,
-} from "./public-holidays.service";
-import { PUBLIC_HOLIDAYS_API_URL } from "../config";
-import { validateInput, shortenPublicHoliday } from "../helpers";
-import { PublicHoliday } from "../types";
+} from "../public-holidays.service";
+import { PUBLIC_HOLIDAYS_API_URL } from "../../config";
+import { validateInput, shortenPublicHoliday } from "../../helpers";
+import { PublicHoliday } from "../../types";
 
 jest.mock("../helpers", () => ({
     ...jest.requireActual("../helpers"),

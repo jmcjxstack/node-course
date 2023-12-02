@@ -2,7 +2,7 @@ import {
     getListOfPublicHolidays,
     checkIfTodayIsPublicHoliday,
     getNextPublicHolidays,
-} from "./public-holidays.service";
+} from "../public-holidays.service";
 
 describe("Public Holidays Service Integration Tests", () => {
     it("should fetch and list public holidays for a specific year and country", async () => {
