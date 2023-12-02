@@ -6,10 +6,10 @@ import {
 } from "./public-holidays.service";
 import { PUBLIC_HOLIDAYS_API_URL } from "../config";
 import { validateInput, shortenPublicHoliday } from "../helpers";
-import { PublicHoliday, PublicHolidayShort } from "../types";
+import { PublicHoliday } from "../types";
 
 jest.mock("../helpers", () => ({
-    ...jest.requireActual("../helpers"), // Use the actual helpers module, except for validateInput
+    ...jest.requireActual("../helpers"),
     validateInput: jest.fn(),
 }));
 
@@ -23,9 +23,6 @@ describe("Public Holidays Service", () => {
     describe("getListOfPublicHolidays", () => {
         it("should fetch and shorten public holidays", async () => {
             const mockData: PublicHoliday[] = [
-                // Mock your data here, similar to the provided data when calling getListOfPublicHolidays(2023, 'GB')
-                // 20231201153549
-                // https://date.nager.at/api/v3/PublicHolidays/2023/GB
                 {
                     date: "2023-01-01",
                     localName: "New Year's Day",
@@ -64,7 +61,6 @@ describe("Public Holidays Service", () => {
                 country: "GB",
             });
 
-            // Ensure the result is correctly shortened
             const expectedShortenedData = mockData.map(shortenPublicHoliday);
             expect(result).toEqual(expectedShortenedData);
         });
@@ -132,7 +128,6 @@ describe("Public Holidays Service", () => {
                     types: ["Public"],
                 },
             ];
-            // Mock your data here, similar to the provided data when calling getNextPublicHolidays('GB')
 
             (
                 axios.get as jest.MockedFunction<typeof axios.get>
@@ -145,7 +140,6 @@ describe("Public Holidays Service", () => {
             );
             expect(validateInput).toHaveBeenCalledWith({ country: "GB" });
 
-            // Ensure the result is correctly shortened
             const expectedShortenedData = mockData.map(shortenPublicHoliday);
             expect(result).toEqual(expectedShortenedData);
         });
