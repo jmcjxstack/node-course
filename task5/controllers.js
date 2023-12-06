@@ -105,7 +105,6 @@ function deleteHobby(req, res) {
     });
 
     req.on('end', () => {
-        // Instead of parsing JSON from the request body, you should directly extract the hobby from the URL path
         const hobby = req.url.split('/').pop();
 
         const updatedHobbies = deleteHobbyData(userId, hobby);
