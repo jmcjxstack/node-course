@@ -1,10 +1,10 @@
 module.exports = {
     preset: "ts-jest",
     testEnvironment: "node",
-    roots: ["./src"],
+    roots: ["./task4/src"],
     silent: false,
     verbose: true,
-    collectCoverageFrom: ["src/**"],
+    collectCoverageFrom: ["./task4/src/**"],
     coverageReporters: ["text"],
     coverageThreshold: {
         global: {

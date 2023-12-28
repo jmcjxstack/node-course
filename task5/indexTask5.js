@@ -1,6 +1,6 @@
 //TASK 5
 const http = require("http");
-const { handleRequest } = require("./task5/router");
+const { handleRequest } = require("./router");
 
 const server = http.createServer(handleRequest);
 
