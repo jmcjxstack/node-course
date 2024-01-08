@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "id": "facb1542-02aa-4303-8f9a-28eb998294ae",
+    "email": "jose@gmail.com",
+    "role": "admin",
+    "password": "password"
+  },
+  {
+    "id": "55c72b43-5e00-4967-a84e-290388f42f85",
+    "email": "anna@gmail.com",
+    "role": "admin",
+    "password": "password"
+  },
+  {
+    "id": "7522d0b5-b2b7-455c-8d7f-774e8878e1ca",
+    "email": "asdsad@sdadsa.com",
+    "role": "admin",
+    "password": "dsasdasd"
+  }
+]

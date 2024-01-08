@@ -1,28 +1,32 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, Express } from "express";
 import swaggerUi from "swagger-ui-express";
 import yaml from "yamljs";
 import path from "path";
 
-import authRoutes from './routes/auth';
+import authRouter from "./routes/auth";
 
-const app = express();
+// Create server
+const app: Express = express();
 const port: number = 3000;
 
+// Middleware to parse requests
 app.use(express.json());
 
-//Endpoint for authentication
-app.use('/api/auth', authRoutes);
+// Router for authentication (both register and login)
+app.use("/api/auth", authRouter);
 
-//Endpoint for swagger documentation
+// Load swagger.yaml to use in docs endpoint
 const swaggerDocument = yaml.load(path.join(__dirname, "swagger.yaml"));
 
+// Endpoint for swagger documentation
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-//Test endpoint
+// Test endpoint
 app.get("/", (req: Request, res: Response) => {
-    res.send("Hello, Express with TypeScript!");
+	res.send(`Hello world!`);
 });
 
+// Listen for connections
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+	console.log(`Server is running on http://localhost:${port}`);
 });
