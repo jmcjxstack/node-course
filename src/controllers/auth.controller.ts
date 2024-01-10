@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { AuthService } from "../services/auth.service";
 import { UserRepository } from "../repositories/user.repository";
 
-export const registerUser = async (req: Request, res: Response) => {
+export async function registerUser(req: Request, res: Response) {
     try {
         // Destructuring object from request body
         const { email, password, role } = req.body;
@@ -27,9 +27,9 @@ export const registerUser = async (req: Request, res: Response) => {
             error: { message: "Internal Server error" },
         });
     }
-};
+}
 
-export const loginUser = async (req: Request, res: Response) => {
+export async function loginUser(req: Request, res: Response) {
     try {
         // Destructuring object from request body
         const { email, password } = req.body;
@@ -53,4 +53,4 @@ export const loginUser = async (req: Request, res: Response) => {
             error: { message: "Internal Server error" },
         });
     }
-};
+}

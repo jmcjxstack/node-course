@@ -6,6 +6,7 @@ import { ProductEntity } from "../schemas/product.entity";
 export class ProductsRepository {
 	private productsFilePath = path.join(__dirname, "../data/products.json");
 
+	// Method to get list of products
 	async getProducts(): Promise<ProductEntity[]> {
 		try {
 			// Reads the contents of the file

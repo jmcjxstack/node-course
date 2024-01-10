@@ -4,6 +4,7 @@ import path from "path";
 export class UserRepository {
 	private usersFilePath = path.join(__dirname, "../data/users.json");
 
+	// Method to get list of users
 	async getUsers(): Promise<Record<string, any>[]> {
 		try {
 			// Reads the contents of the file
@@ -17,6 +18,7 @@ export class UserRepository {
 		}
 	}
 
+	// Method to save a new user
 	async saveUsers(users: Record<string, any>[]): Promise<void> {
 		try {
 			// Stringifies array of users and saves it to file
