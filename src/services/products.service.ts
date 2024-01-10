@@ -56,7 +56,7 @@ export class ProductsService {
         }
     }
 
-    // Method to login user
+    // Method to get specific product
     async getProduct(productId: string): Promise<any> {
         try {
         } catch (error) {

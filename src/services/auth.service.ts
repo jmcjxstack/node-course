@@ -17,7 +17,7 @@ export class AuthService {
         email: string,
         password: string,
         role: string
-    ): Promise<any> {
+    ): Promise<Record<string, any>> {
         try {
             // Simple validation of email
             if (!email.includes("@")) {
@@ -63,14 +63,17 @@ export class AuthService {
     }
 
     // Method to login user
-    async loginUser(email: string, password: string): Promise<any> {
+    async loginUser(
+        email: string,
+        password: string
+    ): Promise<Record<string, any>> {
         try {
             // Get the array of users with getUsers method from userRepository
             const users = await this.userRepository.getUsers();
 
             // Find user with correct credentials
             const user = users.find(
-                (u) => u.email === email && u.password === password
+                (user) => user.email === email && user.password === password
             );
 
             // Error handling
