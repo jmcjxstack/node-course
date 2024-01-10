@@ -1,8 +1,8 @@
-import express from "express";
+import express, { Router } from "express";
 import { registerUser, loginUser } from "../controllers/auth.controller";
 
-// Create router
-const authRouter = express.Router();
+// Create auth router
+const authRouter: Router = express.Router();
 
 // Endpoint to register user
 authRouter.post("/register", registerUser);
