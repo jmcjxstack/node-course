@@ -15,7 +15,7 @@ export async function registerUser(req: Request, res: Response) {
         const authService = new AuthService(userRepository);
 
         // Wait for result of service to register user
-        const result = await authService.registerUser(email, password, role);
+        const result: Record<string, any> = await authService.registerUser(email, password, role);
 
         // Return both status code and response
         return res.status(result.code).json(result);
@@ -41,7 +41,7 @@ export async function loginUser(req: Request, res: Response) {
         const authService = new AuthService(userRepository);
 
         // Wait for result of service to login user
-        const result = await authService.loginUser(email, password);
+        const result: Record<string, any> = await authService.loginUser(email, password);
 
         // Return both status code and response
         return res.status(result.code).json(result);

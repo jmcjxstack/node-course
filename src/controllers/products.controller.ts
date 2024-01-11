@@ -23,7 +23,7 @@ export async function getProducts(req: Request, res: Response) {
         );
 
         // Wait for result of service to get list of products
-        const result = await productsService.getProducts(headers);
+        const result: Record<string, any> = await productsService.getProducts(headers);
 
         // Return both status code and response
         return res.status(result.code).json(result);
@@ -58,8 +58,8 @@ export async function getProduct(req: Request, res: Response) {
             userRepository
         );
 
-        // Wait for result of service to get list of products
-        const result = await productsService.getProduct(headers, productId);
+        // Wait for result of service to get specific product
+        const result: Record<string, any> = await productsService.getProduct(headers, productId);
 
         // Return both status code and response
         return res.status(result.code).json(result);

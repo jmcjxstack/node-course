@@ -4,13 +4,16 @@ import path from "path";
 import { ProductEntity } from "../schemas/product.entity";
 
 export class ProductsRepository {
-	private productsFilePath = path.join(__dirname, "../data/products.json");
+	private productsFilePath: string = path.join(__dirname, "../data/products.json");
 
 	// Method to get list of products
 	async getProducts(): Promise<ProductEntity[]> {
 		try {
 			// Reads the contents of the file
-			const content = await fs.readFile(this.productsFilePath, "utf-8");
+			const content: string = await fs.readFile(
+				this.productsFilePath,
+				"utf-8"
+			);
 
 			// Returns the contents of the file parsed as an object
 			return JSON.parse(content);

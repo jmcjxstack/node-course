@@ -19,6 +19,7 @@ export class ProductsService {
 		headers: Record<string, any>
 	): Promise<Record<string, any>> {
 		try {
+			// Check if needed header is missing
 			if (!headers["x-user-id"]) {
 				return {
 					data: null,
@@ -28,12 +29,15 @@ export class ProductsService {
 			}
 
 			// Get the array of users with getUsers method from userRepository
-			const users = await this.userRepository.getUsers();
+			const users: Record<string, any>[] =
+				await this.userRepository.getUsers();
 
 			// Find user with same id as the x-user-id header
-			const user = users.find((user) => user.id === headers["x-user-id"]);
+			const user: Record<string, any> | undefined = users.find(
+				(user) => user.id === headers["x-user-id"]
+			);
 
-			// Error handling
+			// Response if no user matching authorization header is found
 			if (!user) {
 				return {
 					data: null,
@@ -64,6 +68,7 @@ export class ProductsService {
 		productId: string
 	): Promise<Record<string, any>> {
 		try {
+			// Check if needed header is missing
 			if (!headers["x-user-id"]) {
 				return {
 					data: null,
@@ -73,12 +78,15 @@ export class ProductsService {
 			}
 
 			// Get the array of users with getUsers method from userRepository
-			const users = await this.userRepository.getUsers();
+			const users: Record<string, any>[] =
+				await this.userRepository.getUsers();
 
 			// Find user with same id as the x-user-id header
-			const user = users.find((user) => user.id === headers["x-user-id"]);
+			const user: Record<string, any> | undefined = users.find(
+				(user) => user.id === headers["x-user-id"]
+			);
 
-			// Error handling
+			// Response if no user matching authorization header is found
 			if (!user) {
 				return {
 					data: null,
@@ -92,10 +100,11 @@ export class ProductsService {
 				await this.productsRepository.getProducts();
 
 			// Find product with same id as productId param
-			const product = products.find(
+			const product: ProductEntity | undefined = products.find(
 				(product) => product.id === productId
 			);
 
+			// Response if no product is found
 			if (!product) {
 				return {
 					data: null,

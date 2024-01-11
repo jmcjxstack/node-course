@@ -5,6 +5,7 @@ import path from "path";
 
 import authRouter from "./routes/auth";
 import productsRouter from "./routes/products";
+import cartRouter from "./routes/cart";
 
 // Create server
 const app: Express = express();
@@ -19,6 +20,9 @@ app.use("/api/auth", authRouter);
 // Router for products (list of products and specific product)
 app.use("/api/products", productsRouter);
 
+// Router for cart (get cart, update cart, empty cart and create order)
+app.use("/api/profile/cart", cartRouter);
+
 // Load swagger.yaml to use in docs endpoint
 const swaggerDocument = yaml.load(path.join(__dirname, "swagger.yaml"));
 
@@ -27,5 +31,5 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Listen for connections
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+	console.log(`Server is running on http://localhost:${port}`);
 });
