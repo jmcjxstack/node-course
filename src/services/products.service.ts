@@ -46,7 +46,7 @@ export class ProductsService {
 				};
 			}
 
-			// Get the array of products with getProducts method from userRepository
+			// Get the array of products with getProducts method from productsRepository
 			const products: ProductEntity[] =
 				await this.productsRepository.getProducts();
 
@@ -95,7 +95,7 @@ export class ProductsService {
 				};
 			}
 
-			// Get the array of products with getProducts method from userRepository
+			// Get the array of products with getProducts method from productsRepository
 			const products: ProductEntity[] =
 				await this.productsRepository.getProducts();
 
