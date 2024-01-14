@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import Joi, { ObjectSchema, ValidationResult, number } from "joi";
+import Joi, { ObjectSchema, ValidationResult } from "joi";
 
 import { CartRepository } from "../repositories/cart.repository";
 import { UserRepository } from "../repositories/user.repository";
