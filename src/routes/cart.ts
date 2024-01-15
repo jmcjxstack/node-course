@@ -1,10 +1,6 @@
 import express, { Router } from "express";
-import {
-	getCart,
-	updateCart,
-	emptyCart,
-	createOrder,
-} from "../controllers/cart.controller";
+import { getCart, updateCart, emptyCart } from "../controllers/cart.controller";
+import { createOrder } from "../controllers/order.controller";
 
 // Create products router
 const cartRouter: Router = express.Router();
