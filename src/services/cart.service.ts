@@ -61,7 +61,7 @@ export class CartService {
 				(cart) => cart.userId === user.id && cart.isDeleted === false
 			);
 
-			// Response if searched cart does not exist
+			// Response if searched cart does not exist or is already deleted
 			if (!cart) {
 				// Generate new UUID
 				const id: string = uuidv4();
@@ -171,8 +171,8 @@ export class CartService {
 				(cart) => cart.userId === user.id && cart.isDeleted === false
 			);
 
-			// Response if searched cart does not exist or if is deleted
-			if (!cart || cart.isDeleted === true) {
+			// Response if searched cart does not exist or is already deleted
+			if (!cart) {
 				return {
 					data: null,
 					error: { message: "Cart was not found" },
