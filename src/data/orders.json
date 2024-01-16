@@ -1,1 +1,30 @@
-[]
+[
+  {
+    "id": "f9136e81-5135-427b-824e-03b311609ba7",
+    "userId": "2dbf4f76-4b1d-4997-a3db-fd851922c79a",
+    "cartId": "fc7cbf1b-549c-4beb-94cf-9750d71edccb",
+    "items": [
+      {
+        "product": {
+          "id": "51422fcd-0366-4186-ad5b-c23059b6f64f",
+          "title": "Book",
+          "description": "A very interesting book",
+          "price": 100
+        },
+        "count": 2
+      }
+    ],
+    "payment": {
+      "type": "paypal",
+      "address": "London",
+      "creditCard": "1234-1234-1234-1234"
+    },
+    "delivery": {
+      "type": "post",
+      "address": "London"
+    },
+    "comments": "",
+    "status": "created",
+    "total": 200
+  }
+]
