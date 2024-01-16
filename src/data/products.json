@@ -1,0 +1,20 @@
+[
+	{
+		"id": "51422fcd-0366-4186-ad5b-c23059b6f64f",
+		"title": "Book",
+		"description": "A very interesting book",
+		"price": 100
+	},
+	{
+		"id": "625330de-1477-5297-be6c-d3416ac70750",
+		"title": "Spoon",
+		"description": "A very nice spoon",
+		"price": 50
+	},
+	{
+		"id": "40311ebc-f255-3075-9c4a-b12f48a5e53e",
+		"title": "Cup",
+		"description": "A very beautiful cup",
+		"price": 150
+	}
+]
