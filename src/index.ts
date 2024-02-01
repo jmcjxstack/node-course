@@ -2,6 +2,8 @@ import express, { Express } from "express";
 import swaggerUi from "swagger-ui-express";
 import yaml from "yamljs";
 import path from "path";
+import cors from "cors"
+import "reflect-metadata"
 
 import authRouter from "./routes/auth";
 import productsRouter from "./routes/products";
@@ -10,6 +12,9 @@ import cartRouter from "./routes/cart";
 // Create server
 const app: Express = express();
 const port: number = 3000;
+
+// Middleware to use cors
+app.use(cors());
 
 // Middleware to parse requests
 app.use(express.json());
