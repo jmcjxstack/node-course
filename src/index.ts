@@ -2,7 +2,7 @@ import express, { Express } from "express";
 import swaggerUi from "swagger-ui-express";
 import yaml from "yamljs";
 import path from "path";
-import cors from "cors"
+import cors from "cors";
 
 import authRouter from "./routes/auth";
 import productsRouter from "./routes/products";
@@ -35,5 +35,5 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Listen for connections
 app.listen(port, () => {
-	console.log(`Server is running on http://localhost:${port}`);
+    console.log(`Server is running on http://localhost:${port}`);
 });
