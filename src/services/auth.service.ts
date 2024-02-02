@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { UserRepository } from "../repositories/user.repository";
 
 dotenv.config();
+
 export class AuthService {
 	private userRepository: UserRepository;
 

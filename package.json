@@ -9,7 +9,10 @@
 		"dev": "nodemon --exec ts-node src/index.ts",
 		"test": "jest",
 		"test:coverage": "jest --coverage",
-		"typeorm": "typeorm-ts-node-commonjs"
+		"typeorm": "npx typeorm-ts-node-commonjs --dataSource src/data-source.ts",
+		"typeorm:migrate": "npm run typeorm migration:run",
+		"typeorm:generate": "npm run typeorm migration:generate src/migration/Migration --timestamp",
+		"typeorm:revert": "npm run typeorm migration:revert"
 	},
 	"author": "Jose Miguel Carvajal Jimenez",
 	"license": "ISC",

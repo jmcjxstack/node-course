@@ -3,7 +3,6 @@ import swaggerUi from "swagger-ui-express";
 import yaml from "yamljs";
 import path from "path";
 import cors from "cors"
-import "reflect-metadata"
 
 import authRouter from "./routes/auth";
 import productsRouter from "./routes/products";
