@@ -18,26 +18,29 @@ export class AuthService {
 		email: string,
 		password: string,
 		role: string
-	): Promise<Record<string, any>> {
+	): Promise<any> {
 		try {
 			// Simple validation of email
 			if (!email.includes("@")) {
 				return {
-					data: null,
-					error: { message: "Email is not valid" },
+					response: {
+						data: null,
+						error: { message: "Email is not valid" },
+					},
 					code: 400,
 				};
 			}
 
-			// Get the array of users with getUsers method from userRepository
-			const users: Record<string, any>[] =
-				await this.userRepository.getUsers();
+			// Search for user with email in database
+			const user = await this.userRepository.getUser(email);
 
-			// Check if email is already in use(if an user already uses this email)
-			if (users.some((user) => user.email === email)) {
+			// Handle if email is already in use
+			if (user) {
 				return {
-					data: null,
-					error: { message: "Email is not valid" },
+					response: {
+						data: null,
+						error: { message: "Email is not valid" },
+					},
 					code: 400,
 				};
 			}
@@ -45,44 +48,56 @@ export class AuthService {
 			// Generate new UUID
 			const id: string = uuidv4();
 
-			// Add the new user object to users array, using property shorthand({id: id} => {id})
-			users.push({ id, email, role, password });
+			// Insert user to database
+			const insertResult = await this.userRepository.addUser({
+				id,
+				email,
+				role,
+				password,
+			});
 
-			// Save updated users array to file using saveUsers method from userRepository
-			await this.userRepository.saveUsers(users);
-
-			return { data: { id, email, role }, error: null, code: 200 };
+			return {
+				response: {
+					data: {
+						id: insertResult.id,
+						email: insertResult.email,
+						role: insertResult.role,
+					},
+					error: null,
+				},
+				code: 200,
+			};
 		} catch (error) {
 			// Error handling
 			console.error(error);
 			return {
-				data: null,
-				error: { message: "Internal Server error" },
+				response: {
+					data: null,
+					error: { message: "Internal Server error" },
+				},
 				code: 500,
 			};
 		}
 	}
 
 	// Method to login user
-	async loginUser(
-		email: string,
-		password: string
-	): Promise<Record<string, any>> {
+	async loginUser(email: string, password: string): Promise<any> {
 		try {
-			// Get the array of users with getUsers method from userRepository
-			const users: Record<string, any>[] =
-				await this.userRepository.getUsers();
-
-			// Find user with correct credentials
-			const user: Record<string, any> | undefined = users.find(
-				(user) => user.email === email && user.password === password
+			// Search for user with credentials in database
+			const user = await this.userRepository.checkCredentials(
+				email,
+				password
 			);
 
 			// Response if user with correct credentials is not found
 			if (!user) {
 				return {
-					data: null,
-					error: { message: "No user with such email or password" },
+					response: {
+						data: null,
+						error: {
+							message: "No user with such email or password",
+						},
+					},
 					code: 400,
 				};
 			}
@@ -93,20 +108,22 @@ export class AuthService {
 
 			// Generate JWT token
 			const token: string = jwt.sign(
-				{ userId: user.id, email: user.email, role: user.role },
+				{ id: user.id, email: user.email, role: user.role },
 				secretKey,
 				{
 					expiresIn: "1h", // Token expiration time (adjust as needed)
 				}
 			);
 
-			return { data: { token }, error: null, code: 200 };
+			return { response: { data: { token }, error: null }, code: 200 };
 		} catch (error) {
 			// Error handling
 			console.error(error);
 			return {
-				data: null,
-				error: { message: "Internal Server error" },
+				response: {
+					data: null,
+					error: { message: "Internal Server error" },
+				},
 				code: 500,
 			};
 		}

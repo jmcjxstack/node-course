@@ -1,39 +1,55 @@
-import fs from "fs/promises";
-import path from "path";
+import { Users } from "../entity/Users";
+import { AppDataSource } from "../data-source";
 
 export class UserRepository {
-	private usersFilePath: string = path.join(__dirname, "../data/users.json");
-
-	// Method to get list of users
-	async getUsers(): Promise<Record<string, any>[]> {
+	// Method to get user
+	async getUser(email: string): Promise<any> {
 		try {
-			// Reads the contents of the file
-			const content: string = await fs.readFile(
-				this.usersFilePath,
-				"utf-8"
-			);
+			const user = await AppDataSource.getRepository(Users).findOneBy({
+				email: email,
+			});
 
-			// Returns the contents of the file parsed as an object
-			return JSON.parse(content);
+			return user;
 		} catch (error) {
 			// Error handling
-			console.log(`Error getting list of users: ${error}`);
-			return [];
+			console.log(`Error: ${error}`);
+			return null;
 		}
 	}
 
-	// Method to save a new user
-	async saveUsers(users: Record<string, any>[]): Promise<void> {
+	// Method to add a new user
+	async addUser(newUser: Record<string, any>): Promise<any> {
 		try {
-			// Stringifies array of users and saves it to file
-			await fs.writeFile(
-				this.usersFilePath,
-				JSON.stringify(users, null, 2),
-				"utf-8"
+			const user: Users = await AppDataSource.getRepository(Users).create(
+				newUser
 			);
+
+			const result: Users = await AppDataSource.getRepository(Users).save(
+				user
+			);
+
+			return result;
 		} catch (error) {
 			// Error handling
-			console.log(`Error writing to file: ${error}`);
+			console.log(`Error: ${error}`);
+			return null;
+		}
+	}
+
+	// Method to check if user with credentials exists
+	async checkCredentials(email: string, password: string): Promise<any> {
+		try {
+			const user = await AppDataSource.getRepository(Users)
+				.createQueryBuilder("user")
+				.where("user.email = :email", { email: email })
+				.andWhere("user.password = :password", { password: password })
+				.getOne();
+			
+			return user;
+		} catch (error) {
+			// Error handling
+			console.log(`Error: ${error}`);
+			return null;
 		}
 	}
 }

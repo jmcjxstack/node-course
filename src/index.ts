@@ -7,6 +7,16 @@ import cors from "cors";
 import authRouter from "./routes/auth";
 import productsRouter from "./routes/products";
 import cartRouter from "./routes/cart";
+import { AppDataSource } from "./data-source";
+
+// Establish database connection
+AppDataSource.initialize()
+	.then(() => {
+		console.log("Data Source has been initialized!");
+	})
+	.catch((err) => {
+		console.error("Error during Data Source initialization:", err);
+	});
 
 // Create server
 const app: Express = express();
@@ -35,5 +45,5 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Listen for connections
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+	console.log(`Server is running on http://localhost:${port}`);
 });

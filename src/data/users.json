@@ -16,5 +16,11 @@
 		"email": "maria@gmail.com",
 		"role": "admin",
 		"password": "qwerty"
+	},
+	{
+		"id": "dda6d169-8350-4d27-bd68-465c5b3b4440",
+		"email": "test@gmail.com",
+		"role": "password",
+		"password": "qwerty"
 	}
 ]

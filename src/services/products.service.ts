@@ -30,7 +30,7 @@ export class ProductsService {
 
 			// Get the array of users with getUsers method from userRepository
 			const users: Record<string, any>[] =
-				await this.userRepository.getUsers();
+				await this.userRepository.getUser("A");
 
 			// Find user with same id as the x-user-id header
 			const user: Record<string, any> | undefined = users.find(
@@ -79,7 +79,7 @@ export class ProductsService {
 
 			// Get the array of users with getUsers method from userRepository
 			const users: Record<string, any>[] =
-				await this.userRepository.getUsers();
+				await this.userRepository.getUser("A");
 
 			// Find user with same id as the x-user-id header
 			const user: Record<string, any> | undefined = users.find(
