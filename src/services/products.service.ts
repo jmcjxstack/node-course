@@ -1,127 +1,131 @@
 import { ProductsRepository } from "../repositories/products.repository";
-import { ProductEntity } from "../schemas/product.entity";
 import { UserRepository } from "../repositories/user.repository";
 
 export class ProductsService {
-	private productsRepository: ProductsRepository;
-	private userRepository: UserRepository;
+    private productsRepository: ProductsRepository;
+    private userRepository: UserRepository;
 
-	constructor(
-		productsRepository: ProductsRepository,
-		userRepository: UserRepository
-	) {
-		this.productsRepository = productsRepository;
-		this.userRepository = userRepository;
-	}
+    constructor(
+        productsRepository: ProductsRepository,
+        userRepository: UserRepository
+    ) {
+        this.productsRepository = productsRepository;
+        this.userRepository = userRepository;
+    }
 
-	// Method to get list of products
-	async getProducts(
-		headers: Record<string, any>
-	): Promise<Record<string, any>> {
-		try {
-			// Check if needed header is missing
-			if (!headers["x-user-id"]) {
-				return {
-					data: null,
-					error: { message: "You must be authorized user" },
-					code: 403,
-				};
-			}
+    // Method to get list of products
+    async getProductsList(
+        headers: Record<string, any>
+    ): Promise<Record<string, any>> {
+        try {
+            // Check if needed header is missing
+            if (!headers["x-user-id"]) {
+                return {
+                    response: {
+                        data: null,
+                        error: { message: "You must be authorized user" },
+                    },
+                    code: 403,
+                };
+            }
 
-			// Get the array of users with getUsers method from userRepository
-			const users: Record<string, any>[] =
-				await this.userRepository.getUser("A");
+            // Get the user with the id from the x-user-id header
+            const user: any = await this.userRepository.getUserById(
+                headers["x-user-id"]
+            );
 
-			// Find user with same id as the x-user-id header
-			const user: Record<string, any> | undefined = users.find(
-				(user) => user.id === headers["x-user-id"]
-			);
+            // Response if no user matching authorization header is found
+            if (!user) {
+                return {
+                    response: {
+                        data: null,
+                        error: { message: "User is not authorized" },
+                    },
+                    code: 401,
+                };
+            }
 
-			// Response if no user matching authorization header is found
-			if (!user) {
-				return {
-					data: null,
-					error: { message: "User is not authorized" },
-					code: 401,
-				};
-			}
+            // Get the array of products with getProducts method from productsRepository
+            const products: any =
+                await this.productsRepository.getProductsList();
 
-			// Get the array of products with getProducts method from productsRepository
-			const products: ProductEntity[] =
-				await this.productsRepository.getProducts();
+            console.log(products);
 
-			return { data: products, error: null, code: 200 };
-		} catch (error) {
-			// Error handling
-			console.error(error);
-			return {
-				data: null,
-				error: { message: "Internal Server error" },
-				code: 500,
-			};
-		}
-	}
+            // return { data: products, error: null, code: 200 };
+            return { response: { data: products, error: null }, code: 200 };
+        } catch (error) {
+            // Error handling
+            console.error(error);
+            return {
+                response: {
+                    data: null,
+                    error: { message: "Internal Server error" },
+                },
+                code: 500,
+            };
+        }
+    }
 
-	// Method to get specific product
-	async getProduct(
-		headers: Record<string, any>,
-		productId: string
-	): Promise<Record<string, any>> {
-		try {
-			// Check if needed header is missing
-			if (!headers["x-user-id"]) {
-				return {
-					data: null,
-					error: { message: "You must be authorized user" },
-					code: 403,
-				};
-			}
+    // Method to get specific product
+    async getProductById(
+        headers: Record<string, any>,
+        productId: string
+    ): Promise<Record<string, any>> {
+        try {
+            // Check if needed header is missing
+            if (!headers["x-user-id"]) {
+                return {
+                    response: {
+                        data: null,
+                        error: { message: "You must be authorized user" },
+                    },
+                    code: 403,
+                };
+            }
 
-			// Get the array of users with getUsers method from userRepository
-			const users: Record<string, any>[] =
-				await this.userRepository.getUser("A");
+            // Get the user with the id from the x-user-id header
+            const user: any = await this.userRepository.getUserById(
+                headers["x-user-id"]
+            );
 
-			// Find user with same id as the x-user-id header
-			const user: Record<string, any> | undefined = users.find(
-				(user) => user.id === headers["x-user-id"]
-			);
+            // Response if no user matching authorization header is found
+            if (!user) {
+                return {
+                    response: {
+                        data: null,
+                        error: { message: "User is not authorized" },
+                    },
+                    code: 401,
+                };
+            }
 
-			// Response if no user matching authorization header is found
-			if (!user) {
-				return {
-					data: null,
-					error: { message: "User is not authorized" },
-					code: 401,
-				};
-			}
+            // Get the array of products with getProducts method from productsRepository
+            const product: any = await this.productsRepository.getProductById(
+                productId
+            );
 
-			// Get the array of products with getProducts method from productsRepository
-			const products: ProductEntity[] =
-				await this.productsRepository.getProducts();
+            // Response if no product is found
+            if (!product) {
+                return {
+                    response: {
+                        data: null,
+                        error: { message: "No product with such id" },
+                    },
+                    code: 404,
+                };
+            }
 
-			// Find product with same id as productId param
-			const product: ProductEntity | undefined = products.find(
-				(product) => product.id === productId
-			);
-
-			// Response if no product is found
-			if (!product) {
-				return {
-					data: null,
-					error: { message: "No product with such id" },
-					code: 404,
-				};
-			}
-
-			return { data: product, error: null, code: 200 };
-		} catch (error) {
-			// Error handling
-			console.error(error);
-			return {
-				data: null,
-				error: { message: "Internal Server error" },
-				code: 500,
-			};
-		}
-	}
+            return { response: { data: product, error: null }, code: 200 };
+        } catch (error) {
+            // Error handling
+            console.error(error);
+            return {
+                response: {
+                    data: null,
+                    error: { message: "Internal Server error" },
+                },
+                code: 500,
+            };
+        }
+    }
 }

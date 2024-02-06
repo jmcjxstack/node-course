@@ -1,26 +1,33 @@
-import fs from "fs/promises";
-import path from "path";
-
-import { ProductEntity } from "../schemas/product.entity";
+import { AppDataSource } from "../data-source";
+import { Products } from "../entity/Products";
 
 export class ProductsRepository {
-	private productsFilePath: string = path.join(__dirname, "../data/products.json");
+    // Method to get list of products
+    async getProductsList(): Promise<any> {
+        try {
+            const products = await AppDataSource.getRepository(Products).find();
+            return products;
+        } catch (error) {
+            // Error handling
+            console.log(`Error getting list of products: ${error}`);
+            return null;
+        }
+    }
 
-	// Method to get list of products
-	async getProducts(): Promise<ProductEntity[]> {
-		try {
-			// Reads the contents of the file
-			const content: string = await fs.readFile(
-				this.productsFilePath,
-				"utf-8"
-			);
+    // Method to get product by id
+    async getProductById(id: string) {
+        try {
+            const results = await AppDataSource.getRepository(
+                Products
+            ).findOneBy({
+                id: id,
+            });
 
-			// Returns the contents of the file parsed as an object
-			return JSON.parse(content);
-		} catch (error) {
-			// Error handling
-			console.log(`Error getting list of products: ${error}`);
-			return [];
-		}
-	}
+            return results;
+        } catch (error) {
+            // Error handling
+            console.log(`Error getting product: ${error}`);
+            return null;
+        }
+    }
 }
