@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 
 import { UserRepository } from "../repositories/user.repository";
+import { TODO } from "../schemas/Todo";
 
 dotenv.config();
 
@@ -18,7 +19,7 @@ export class AuthService {
         email: string,
         password: string,
         role: string
-    ): Promise<any> {
+    ): Promise<TODO> {
         try {
             // Simple validation of email
             if (!email.includes("@")) {
@@ -81,7 +82,7 @@ export class AuthService {
     }
 
     // Method to login user
-    async loginUser(email: string, password: string): Promise<any> {
+    async loginUser(email: string, password: string): Promise<TODO> {
         try {
             // Search for user with credentials in database
             const user = await this.userRepository.checkCredentials(

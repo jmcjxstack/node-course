@@ -1,9 +1,10 @@
 import { AppDataSource } from "../data-source";
 import { Products } from "../entity/Products";
+import { TODO } from "../schemas/Todo";
 
 export class ProductsRepository {
     // Method to get list of products
-    async getProductsList(): Promise<any> {
+    async getProductsList(): Promise<TODO> {
         try {
             const products = await AppDataSource.getRepository(Products).find();
             return products;

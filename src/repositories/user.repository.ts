@@ -1,9 +1,10 @@
 import { Users } from "../entity/Users";
 import { AppDataSource } from "../data-source";
+import { TODO } from "../schemas/Todo";
 
 export class UserRepository {
     // Method to get user
-    async getUserByEmail(email: string): Promise<any> {
+    async getUserByEmail(email: string): Promise<TODO> {
         try {
             const user = await AppDataSource.getRepository(Users).findOneBy({
                 email: email,
@@ -18,7 +19,7 @@ export class UserRepository {
     }
 
     // Method to add a new user
-    async addUser(newUser: Record<string, any>): Promise<any> {
+    async addUser(newUser: Record<string, any>): Promise<TODO> {
         try {
             const user: Users = await AppDataSource.getRepository(Users).create(
                 newUser
@@ -37,7 +38,7 @@ export class UserRepository {
     }
 
     // Method to check if user with credentials exists
-    async checkCredentials(email: string, password: string): Promise<any> {
+    async checkCredentials(email: string, password: string): Promise<TODO> {
         try {
             const user = await AppDataSource.getRepository(Users)
                 .createQueryBuilder("user")
