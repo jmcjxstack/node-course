@@ -16,17 +16,17 @@ export class Order {
 	id!: string;
 
 	@Column()
-	userId!: string;
+	user_id!: string;
 
 	@ManyToOne(() => Users)
-	@JoinColumn({ name: "userId" })
+	@JoinColumn({ name: "user_id" })
 	user!: Users;
 
 	@Column()
-	cartId!: string;
+	cart_id!: string;
 
 	@ManyToOne(() => Carts)
-	@JoinColumn({ name: "cartId" })
+	@JoinColumn({ name: "cart_id" })
 	cart!: Carts;
 
 	@OneToMany(() => OrderItem, (item) => item.order, { cascade: true })

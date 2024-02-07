@@ -8,17 +8,17 @@ export class OrderItem {
 	id!: string;
 
 	@Column()
-	orderId!: string;
+	order_id!: string;
 
 	@ManyToOne(() => Order, (order) => order.items)
-	@JoinColumn({ name: "orderId" })
+	@JoinColumn({ name: "order_id" })
 	order!: Order;
 
 	@Column()
-	productId!: string;
+	product_id!: string;
 
 	@ManyToOne(() => Products, { cascade: true })
-	@JoinColumn({ name: "productId" })
+	@JoinColumn({ name: "product_id" })
 	product!: Products;
 
 	@Column()

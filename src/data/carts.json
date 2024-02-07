@@ -45,5 +45,11 @@
 		"userId": "1181b317-003e-47d0-b232-9cf60e2a875d",
 		"isDeleted": false,
 		"items": []
+	},
+	{
+		"id": "89f89659-aa43-4037-89b7-a177707a44bc",
+		"userId": "1181b317-003e-47d0-b232-9cf60e2a875d",
+		"isDeleted": true,
+		"items": []
 	}
 ]

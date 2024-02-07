@@ -9,17 +9,17 @@ export class CartItem {
 	id!: string;
 
 	@Column()
-	cartId!: string;
+	cart_id!: string;
 
 	@ManyToOne(() => Carts, (cart) => cart.items)
-	@JoinColumn({ name: "cartId" })
+	@JoinColumn({ name: "cart_id" })
 	cart!: Carts;
 
 	@Column()
-	productId!: string;
+	product_id!: string;
 
 	@ManyToOne(() => Products, { cascade: true })
-	@JoinColumn({ name: "productId" })
+	@JoinColumn({ name: "product_id" })
 	product!: Products;
 
 	@Column()

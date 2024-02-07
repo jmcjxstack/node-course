@@ -16,14 +16,14 @@ export class Carts {
 	id!: string;
 
 	@Column()
-	userId!: string;
+	user_id!: string;
 
 	@ManyToOne(() => Users)
-	@JoinColumn({ name: "userId" })
+	@JoinColumn({ name: "user_id" })
 	user!: Users;
 
 	@Column()
-	isDeleted!: boolean;
+	is_deleted!: boolean;
 
 	@OneToMany(() => CartItem, (item) => item.cart, { cascade: true })
 	items!: CartItem[];
