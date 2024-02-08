@@ -13,7 +13,7 @@ export class UserRepository {
             return user;
         } catch (error) {
             // Error handling
-            console.log(`Error getting user from database: ${error}`);
+            console.error(`Error getting user from database: ${error}`);
             return null;
         }
     }
@@ -32,7 +32,7 @@ export class UserRepository {
             return result;
         } catch (error) {
             // Error handling
-            console.log(`Error adding user to database: ${error}`);
+            console.error(`Error adding user to database: ${error}`);
             return null;
         }
     }
@@ -49,7 +49,7 @@ export class UserRepository {
             return user;
         } catch (error) {
             // Error handling
-            console.log(`Error checking credentials: ${error}`);
+            console.error(`Error checking credentials: ${error}`);
             return null;
         }
     }
@@ -63,7 +63,7 @@ export class UserRepository {
             return user;
         } catch (error) {
             // Error handling
-            console.log(`Error getting user from database: ${error}`);
+            console.error(`Error getting user from database: ${error}`);
             return null;
         }
     }

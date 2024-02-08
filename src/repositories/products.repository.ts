@@ -10,7 +10,7 @@ export class ProductsRepository {
             return products;
         } catch (error) {
             // Error handling
-            console.log(`Error getting list of products: ${error}`);
+            console.error(`Error getting list of products: ${error}`);
             return null;
         }
     }
@@ -27,7 +27,7 @@ export class ProductsRepository {
             return results;
         } catch (error) {
             // Error handling
-            console.log(`Error getting product: ${error}`);
+            console.error(`Error getting product: ${error}`);
             return null;
         }
     }

@@ -7,6 +7,7 @@ import { ProductsRepository } from "../repositories/products.repository";
 import { CartEntity } from "../schemas/cart.entity";
 import { ProductEntity } from "../schemas/product.entity";
 import { CartItemEntity } from "../schemas/cart.entity";
+import { TODO } from "../schemas/Todo";
 
 export class CartService {
 	private cartRepository: CartRepository;
@@ -29,36 +30,32 @@ export class CartService {
 			// Check if needed header is missing
 			if (!headers["x-user-id"]) {
 				return {
-					data: null,
-					error: { message: "You must be authorized user" },
+					response: {
+						data: null,
+						error: { message: "You must be authorized user" },
+					},
 					code: 403,
 				};
 			}
 
-			// Get the array of users with getUsers method from userRepository
-			const users: Record<string, any>[] =
-				await this.userRepository.getUserByEmail("a");
-
-			// Find user with same id as the x-user-id header
-			const user: Record<string, any> | undefined = users.find(
-				(user) => user.id === headers["x-user-id"]
+			// Get the user with the id from the x-user-id header
+			const user: TODO = await this.userRepository.getUserById(
+				headers["x-user-id"]
 			);
 
 			// Response if no user matching authorization header is found
 			if (!user) {
 				return {
-					data: null,
-					error: { message: "User is not authorized" },
+					response: {
+						data: null,
+						error: { message: "User is not authorized" },
+					},
 					code: 401,
 				};
 			}
 
-			// Get the array of carts with getCarts method from cartRepository
-			const carts: CartEntity[] = await this.cartRepository.getCarts();
-
-			// Find the cart that belongs to user and is not deleted
-			const cart: CartEntity | undefined = carts.find(
-				(cart) => cart.userId === user.id && cart.isDeleted === false
+			const cart: TODO = await this.cartRepository.getCartById(
+				headers["x-user-id"]
 			);
 
 			// Response if searched cart does not exist or is already deleted
@@ -66,46 +63,42 @@ export class CartService {
 				// Generate new UUID
 				const id: string = uuidv4();
 
-				// Add the new cart object to carts array
-				carts.push({
+				// Create cart and save it to database
+				const newCart = await this.cartRepository.addNewCart({
 					id,
-					userId: headers["x-user-id"],
-					isDeleted: false,
-					items: [],
+					user_id: headers["x-user-id"],
+					is_deleted: false,
 				});
 
-				// Save updated carts array to file using saveCarts method from cartRepository
-				await this.cartRepository.saveCarts(carts);
-
 				return {
-					data: { cart: { id: user.id, items: [] } },
-					total: 0,
-					error: null,
+					response: {
+						data: { cart: { id: newCart.id, items: [] }, total: 0 },
+						error: null,
+					},
 					code: 200,
 				};
 			}
 
 			// Calculate total cost of the cart
-			const totalCost: number | undefined = cart?.items.reduce(
-				(acc, item) => {
+			const totalCost: TODO = cart?.items.reduce(
+				(acc: TODO, item: TODO) => {
 					return acc + item.product.price * item.count;
 				},
 				0
 			);
 
-			// Construct data object
-			const cartResponse: Record<string, any> = {
-				cart: { id: cart?.userId, items: cart?.items },
-				total: totalCost,
-			};
+			// Create data object
+			const cartResponse = { cart, total: totalCost };
 
-			return { data: cartResponse, error: null, code: 200 };
+			return { response: { data: cartResponse, error: null }, code: 200 };
 		} catch (error) {
 			// Error handling
 			console.error(error);
 			return {
-				data: null,
-				error: { message: "Internal Server error" },
+				response: {
+					data: null,
+					error: { message: "Internal Server error" },
+				},
 				code: 500,
 			};
 		}
@@ -164,7 +157,9 @@ export class CartService {
 			}
 
 			// Get the array of carts with getCarts method from cartRepository
-			const carts: CartEntity[] = await this.cartRepository.getCarts();
+			const carts: CartEntity[] = await this.cartRepository.getCartById(
+				"aq"
+			);
 
 			// Find the cart that belongs to user and is not deleted
 			const cart: CartEntity | undefined = carts.find(
@@ -225,7 +220,7 @@ export class CartService {
 					cart.items.push(cartItemToAdd);
 
 					// Save updated carts array to file using saveCarts method from cartRepository
-					await this.cartRepository.saveCarts(carts);
+					await this.cartRepository.addNewCart(carts);
 				}
 
 				// Handle removing product from cart if count from request body is 0
@@ -235,13 +230,13 @@ export class CartService {
 				);
 
 				// Save updated carts array to file using saveCarts method from cartRepository
-				await this.cartRepository.saveCarts(carts);
+				await this.cartRepository.addNewCart(carts);
 			} else {
 				// Update count of product in cart
 				selectedProduct.count = body.count;
 
 				// Save updated carts array to file using saveCarts method from cartRepository
-				await this.cartRepository.saveCarts(carts);
+				await this.cartRepository.addNewCart(carts);
 			}
 
 			// Calculate total cost of the cart
@@ -263,8 +258,10 @@ export class CartService {
 			// Error handling
 			console.error(error);
 			return {
-				data: null,
-				error: { message: "Internal Server error" },
+				response: {
+					data: null,
+					error: { message: "Internal Server error" },
+				},
 				code: 500,
 			};
 		}
@@ -302,7 +299,9 @@ export class CartService {
 			}
 
 			// Get the array of carts with getCarts method from cartRepository
-			const carts: CartEntity[] = await this.cartRepository.getCarts();
+			const carts: CartEntity[] = await this.cartRepository.getCartById(
+				"a"
+			);
 
 			// Find the cart that belongs to user and is not deleted
 			const cart: CartEntity | undefined = carts.find(
@@ -322,15 +321,17 @@ export class CartService {
 			cart.isDeleted = true;
 
 			// Save updated carts array to file using saveCarts method from cartRepository
-			await this.cartRepository.saveCarts(carts);
+			await this.cartRepository.addNewCart(carts);
 
 			return { data: { success: true }, error: null, code: 200 };
 		} catch (error) {
 			// Error handling
 			console.error(error);
 			return {
-				data: null,
-				error: { message: "Internal Server error" },
+				response: {
+					data: null,
+					error: { message: "Internal Server error" },
+				},
 				code: 500,
 			};
 		}

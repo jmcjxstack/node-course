@@ -22,7 +22,7 @@ export class OrderRepository {
 			return JSON.parse(content);
 		} catch (error) {
 			// Error handling
-			console.log(`Error getting list of orders: ${error}`);
+			console.error(`Error getting list of orders: ${error}`);
 			return [];
 		}
 	}
@@ -38,7 +38,7 @@ export class OrderRepository {
 			);
 		} catch (error) {
 			// Error handling
-			console.log(`Error writing to file: ${error}`);
+			console.error(`Error writing to file: ${error}`);
 		}
 	}
 }
