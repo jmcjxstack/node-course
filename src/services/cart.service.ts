@@ -132,52 +132,48 @@ export class CartService {
 			// Check if needed header is missing
 			if (!headers["x-user-id"]) {
 				return {
-					data: null,
-					error: { message: "You must be authorized user" },
+					response: {
+						data: null,
+						error: { message: "You must be authorized user" },
+					},
 					code: 403,
 				};
 			}
 
-			// Get the array of users with getUsers method from userRepository
-			const users: Record<string, any>[] =
-				await this.userRepository.getUserByEmail("a");
-
-			// Find user with same id as the x-user-id header
-			const user: Record<string, any> | undefined = users.find(
-				(user) => user.id === headers["x-user-id"]
+			// Get the user with the id from the x-user-id header
+			const user: TODO = await this.userRepository.getUserById(
+				headers["x-user-id"]
 			);
 
 			// Response if no user matching authorization header is found
 			if (!user) {
 				return {
-					data: null,
-					error: { message: "User is not authorized" },
+					response: {
+						data: null,
+						error: { message: "User is not authorized" },
+					},
 					code: 401,
 				};
 			}
 
-			// Get the array of carts with getCarts method from cartRepository
-			const carts: CartEntity[] = await this.cartRepository.getCartById(
-				"aq"
-			);
-
-			// Find the cart that belongs to user and is not deleted
-			const cart: CartEntity | undefined = carts.find(
-				(cart) => cart.userId === user.id && cart.isDeleted === false
+			let cart: TODO = await this.cartRepository.getCartById(
+				headers["x-user-id"]
 			);
 
 			// Response if searched cart does not exist or is already deleted
 			if (!cart) {
 				return {
-					data: null,
-					error: { message: "Cart was not found" },
+					response: {
+						data: null,
+						error: { message: "Cart was not found" },
+					},
 					code: 404,
 				};
 			}
 
 			// Get the product to update from the user cart
-			const selectedProduct: CartItemEntity | undefined = cart.items.find(
-				(item) => item.product.id === body.productId
+			const selectedProduct: TODO = cart.items.find(
+				(item: TODO) => item.product.id === body.productId
 			);
 
 			// Add product to cart if product on request body does not exist on cart
@@ -186,74 +182,73 @@ export class CartService {
 				// but product count in request body is 0
 				if (body.count === 0) {
 					return {
-						data: null,
-						error: { message: "Products are not valid" },
+						response: {
+							data: null,
+							error: { message: "Products are not valid" },
+						},
 						code: 400,
 					};
 				}
 
-				// Get the array of products with getProducts method from productsRepository
-				const products: ProductEntity[] =
-					await this.productsRepository.getProductsList();
+				// Get product based on its id
+				const productToAdd =
+					await this.productsRepository.getProductById(
+						body.productId
+					);
 
-				// From array of products get product to add to cart
-				const productToAdd: ProductEntity | undefined = products.find(
-					(product) => body.productId === product.id
-				);
-
+				// Handle if the product does not exist in either the cart or the products database.
 				if (!selectedProduct && !productToAdd) {
-					// Handle if the product does not exist in either the cart or the products array.
 					return {
-						data: null,
-						error: { message: "Products are not valid" },
+						response: {
+							data: null,
+							error: { message: "Products are not valid" },
+						},
 						code: 400,
 					};
 				}
 
 				// Construct cart item object and add to cart
 				if (productToAdd) {
-					const cartItemToAdd: CartItemEntity = {
-						product: productToAdd,
+					const id: string = uuidv4();
+
+					const cartItemToAdd = {
+						id,
 						count: body.count,
+						cart_id: cart.id,
+						product_id: body.productId,
 					};
 
-					cart.items.push(cartItemToAdd);
-
-					// Save updated carts array to file using saveCarts method from cartRepository
-					await this.cartRepository.addNewCart(carts);
+					await this.cartRepository.addCartItem(cartItemToAdd);
 				}
-
-				// Handle removing product from cart if count from request body is 0
-			} else if (selectedProduct && body.count === 0) {
-				cart.items = cart.items.filter(
-					(item) => item.product.id !== body.productId
+			}
+			// Handle removing product from cart if count from request body is 0
+			else if (selectedProduct && body.count === 0) {
+				await this.cartRepository.deleteCartItem(
+					selectedProduct.product.id,
+					cart.id
 				);
-
-				// Save updated carts array to file using saveCarts method from cartRepository
-				await this.cartRepository.addNewCart(carts);
 			} else {
-				// Update count of product in cart
-				selectedProduct.count = body.count;
-
-				// Save updated carts array to file using saveCarts method from cartRepository
-				await this.cartRepository.addNewCart(carts);
+				await this.cartRepository.updateCartItem(
+					selectedProduct.product.id,
+					cart.id,
+					body.count
+				);
 			}
 
+			cart = await this.cartRepository.getCartById(headers["x-user-id"]);
+
 			// Calculate total cost of the cart
-			const totalCost: number | undefined = cart?.items.reduce(
-				(acc, item) => {
+			const totalCost: TODO = cart?.items.reduce(
+				(acc: TODO, item: TODO) => {
 					return acc + item.product.price * item.count;
 				},
 				0
 			);
 
-			// Construct data object
-			const cartResponse: Record<string, any> = {
-				cart: { id: cart?.userId, items: cart?.items },
-				total: totalCost,
-			};
+			// Create data object
+			const cartResponse = { cart, total: totalCost };
 
-			return { data: cartResponse, error: null, code: 200 };
+			return { response: { data: cartResponse, error: null }, code: 200 };
 		} catch (error) {
 			// Error handling
 			console.error(error);
@@ -280,13 +275,9 @@ export class CartService {
 				};
 			}
 
-			// Get the array of users with getUsers method from userRepository
-			const users: Record<string, any>[] =
-				await this.userRepository.getUserByEmail("a");
-
-			// Find user with same id as the x-user-id header
-			const user: Record<string, any> | undefined = users.find(
-				(user) => user.id === headers["x-user-id"]
+			// Get the user with the id from the x-user-id header
+			const user: TODO = await this.userRepository.getUserById(
+				headers["x-user-id"]
 			);
 
 			// Response if no user matching authorization header is found
@@ -298,14 +289,8 @@ export class CartService {
 				};
 			}
 
-			// Get the array of carts with getCarts method from cartRepository
-			const carts: CartEntity[] = await this.cartRepository.getCartById(
-				"a"
-			);
-
-			// Find the cart that belongs to user and is not deleted
-			const cart: CartEntity | undefined = carts.find(
-				(cart) => cart.userId === user.id && cart.isDeleted === false
+			const cart: TODO = await this.cartRepository.getCartById(
+				headers["x-user-id"]
 			);
 
 			// Response if searched cart does not exist or is already deleted
@@ -317,13 +302,12 @@ export class CartService {
 				};
 			}
 
-			// Change isDeleted property to true
-			cart.isDeleted = true;
+			await this.cartRepository.deleteCart(user.id);
 
-			// Save updated carts array to file using saveCarts method from cartRepository
-			await this.cartRepository.addNewCart(carts);
-
-			return { data: { success: true }, error: null, code: 200 };
+			return {
+				response: { data: { success: true }, error: null },
+				code: 200,
+			};
 		} catch (error) {
 			// Error handling
 			console.error(error);
