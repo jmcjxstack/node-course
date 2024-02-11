@@ -1,5 +1,5 @@
 import { Entity, PrimaryColumn, ManyToOne, JoinColumn, Column } from "typeorm";
-import { Order } from "./Order";
+import { Orders } from "./Orders";
 import { Products } from "./Products";
 
 @Entity()
@@ -10,9 +10,9 @@ export class OrderItem {
 	@Column()
 	order_id!: string;
 
-	@ManyToOne(() => Order, (order) => order.items)
+	@ManyToOne(() => Orders, (order) => order.items)
 	@JoinColumn({ name: "order_id" })
-	order!: Order;
+	order!: Orders;
 
 	@Column()
 	product_id!: string;

@@ -1,44 +1,43 @@
-import fs from "fs/promises";
-import path from "path";
+import { AppDataSource } from "../data-source";
+import { Orders } from "../entity/Orders";
+import { OrderItem } from "../entity/OrderItem";
 
-import { OrderEntity } from "../schemas/order.entity";
+import { TODO } from "../schemas/Todo";
 
 export class OrderRepository {
-	private ordersFilePath: string = path.join(
-		__dirname,
-		"../data/orders.json"
-	);
-
-	// Method to get list of orders
-	async getOrders(): Promise<OrderEntity[]> {
+	// Method to save orders
+	async addOrder(newOrder: TODO): Promise<TODO> {
 		try {
-			// Reads the contents of the file
-			const content: string = await fs.readFile(
-				this.ordersFilePath,
-				"utf-8"
+			const order: TODO = await AppDataSource.getRepository(
+				Orders
+			).create(newOrder);
+
+			const result: TODO = await AppDataSource.getRepository(Orders).save(
+				order
 			);
 
-			// Returns the contents of the file parsed as an object
-			return JSON.parse(content);
+			return result;
 		} catch (error) {
 			// Error handling
-			console.error(`Error getting list of orders: ${error}`);
-			return [];
+			console.error(`Error saving order: ${error}`);
 		}
 	}
 
-	// Method to save orders
-	async saveOrders(orders: OrderEntity[]): Promise<void> {
+	// Method to save order item
+	async addOrderItem(newOrderItem: TODO): Promise<TODO> {
 		try {
-			// Stringifies array of orders and saves it to file
-			await fs.writeFile(
-				this.ordersFilePath,
-				JSON.stringify(orders, null, 2),
-				"utf-8"
-			);
+			const orderItem: TODO = await AppDataSource.getRepository(
+				OrderItem
+			).create(newOrderItem);
+
+			const result: TODO = await AppDataSource.getRepository(
+				OrderItem
+			).save(orderItem);
+
+			return result;
 		} catch (error) {
 			// Error handling
-			console.error(`Error writing to file: ${error}`);
+			console.error(`Error saving order item: ${error}`);
 		}
 	}
 }

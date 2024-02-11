@@ -2,10 +2,8 @@ import { v4 as uuidv4 } from "uuid";
 
 import { CartRepository } from "../repositories/cart.repository";
 import { UserRepository } from "../repositories/user.repository";
-import { ProductsRepository } from "../repositories/products.repository";
 import { OrderRepository } from "../repositories/order.repository";
-import { CartEntity } from "../schemas/cart.entity";
-import { OrderEntity } from "../schemas/order.entity";
+import { TODO } from "../schemas/Todo";
 
 export class OrderService {
 	private cartRepository: CartRepository;
@@ -15,7 +13,6 @@ export class OrderService {
 	constructor(
 		cartRepository: CartRepository,
 		userRepository: UserRepository,
-		productsRepository: ProductsRepository,
 		orderRepository: OrderRepository
 	) {
 		this.cartRepository = cartRepository;
@@ -37,13 +34,9 @@ export class OrderService {
 				};
 			}
 
-			// Get the array of users with getUsers method from userRepository
-			const users: Record<string, any>[] =
-				await this.userRepository.getUserByEmail("a");
-
-			// Find user with same id as the x-user-id header
-			const user: Record<string, any> | undefined = users.find(
-				(user) => user.id === headers["x-user-id"]
+			// Get the user with the id from the x-user-id header
+			const user: TODO = await this.userRepository.getUserById(
+				headers["x-user-id"]
 			);
 
 			// Response if no user matching authorization header is found
@@ -55,14 +48,8 @@ export class OrderService {
 				};
 			}
 
-			// Get the array of carts with getCarts method from cartRepository
-			const carts: CartEntity[] = await this.cartRepository.getCartById(
-				"a"
-			);
-
-			// Find the cart that belongs to user and is not deleted
-			const cart: CartEntity | undefined = carts.find(
-				(cart) => cart.userId === user.id && cart.isDeleted === false
+			const cart: TODO = await this.cartRepository.getCartById(
+				headers["x-user-id"]
 			);
 
 			// Response if searched cart does not exist or is already deleted
@@ -84,20 +71,43 @@ export class OrderService {
 			}
 
 			// Calculate total cost of the order
-			const totalCost: number | undefined = cart?.items.reduce(
-				(acc, item) => {
+			const totalCost: number = cart?.items.reduce(
+				(acc: TODO, item: TODO) => {
 					return acc + item.product.price * item.count;
 				},
 				0
 			);
 
-			// Generate new UUID
-			const id: string = uuidv4();
+			const orderToAdd: TODO = {
+				id: uuidv4(),
+				user_id: user.id,
+				cart_id: cart.id,
+				payment: {
+					type: "paypal",
+					address: "London",
+					creditCard: "1234-1234-1234-1234",
+				},
+				delivery: { type: "post", address: "London" },
+				comments: "",
+				status: "created",
+				total: totalCost,
+			};
 
-			// Construct order to be saved to file
-			const order: OrderEntity = {
-				id,
-				userId: cart.userId,
+			await this.orderRepository.addOrder(orderToAdd);
+
+			await cart.items.map((item: TODO) =>
+				this.orderRepository.addOrderItem({
+					id: uuidv4(),
+					order_id: orderToAdd.id,
+					product_id: item.product.id,
+					count: item.count,
+				})
+			);
+
+			// Construct order object for response
+			const orderResponse: TODO = {
+				id: orderToAdd.id,
+				userId: user.id,
 				cartId: cart.id,
 				items: cart.items,
 				payment: {
@@ -111,22 +121,10 @@ export class OrderService {
 				total: totalCost,
 			};
 
-			// Get the array of orders with getOrders method from orderRepository
-			const orders: OrderEntity[] =
-				await this.orderRepository.getOrders();
-
-			// Add the new order object to orders array
-			orders.push(order);
-
-			// Save updated orders array to file using saveOrders method from orderRepository
-			await this.orderRepository.saveOrders(orders);
-
-			// Construct data object for response
-			const orderResponse: Record<string, any> = {
-				order,
+			return {
+				response: { data: orderResponse, error: null },
+				code: 200,
 			};
-
-			return { data: orderResponse, error: null, code: 200 };
 		} catch (error) {
 			// Error handling
 			console.error(error);

@@ -11,7 +11,7 @@ import { Carts } from "./Carts";
 import { OrderItem } from "./OrderItem";
 
 @Entity()
-export class Order {
+export class Orders {
 	@PrimaryColumn()
 	id!: string;
 
