@@ -1,6 +1,7 @@
+import { Products } from "../entity/Products";
+import { Users } from "../entity/Users";
 import { ProductsRepository } from "../repositories/products.repository";
 import { UserRepository } from "../repositories/user.repository";
-import { TODO } from "../schemas/Todo";
 
 export class ProductsService {
 	private productsRepository: ProductsRepository;
@@ -31,7 +32,7 @@ export class ProductsService {
 			}
 
 			// Get the user with the id from the x-user-id header
-			const user: TODO = await this.userRepository.getUserById(
+			const user: Users | null = await this.userRepository.getUserById(
 				headers["x-user-id"]
 			);
 
@@ -46,11 +47,10 @@ export class ProductsService {
 				};
 			}
 
-			// Get the array of products with getProducts method from productsRepository
-			const products: TODO =
+			// Get the list of products
+			const products: Products[] | null =
 				await this.productsRepository.getProductsList();
 
-			// return { data: products, error: null, code: 200 };
 			return { response: { data: products, error: null }, code: 200 };
 		} catch (error) {
 			// Error handling
@@ -83,7 +83,7 @@ export class ProductsService {
 			}
 
 			// Get the user with the id from the x-user-id header
-			const user: TODO = await this.userRepository.getUserById(
+			const user: Users | null = await this.userRepository.getUserById(
 				headers["x-user-id"]
 			);
 
@@ -98,10 +98,9 @@ export class ProductsService {
 				};
 			}
 
-			// Get the array of products with getProducts method from productsRepository
-			const product: TODO = await this.productsRepository.getProductById(
-				productId
-			);
+			// Get the product that matches the productId
+			const product: Products | null =
+				await this.productsRepository.getProductById(productId);
 
 			// Response if no product is found
 			if (!product) {

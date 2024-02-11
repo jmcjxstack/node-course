@@ -4,10 +4,9 @@ import Joi, { ObjectSchema, ValidationResult } from "joi";
 import { CartRepository } from "../repositories/cart.repository";
 import { UserRepository } from "../repositories/user.repository";
 import { ProductsRepository } from "../repositories/products.repository";
-import { CartEntity } from "../schemas/cart.entity";
-import { ProductEntity } from "../schemas/product.entity";
-import { CartItemEntity } from "../schemas/cart.entity";
-import { TODO } from "../schemas/Todo";
+import { Carts } from "../entity/Carts";
+import { Users } from "../entity/Users";
+import { Products } from "../entity/Products";
 
 export class CartService {
 	private cartRepository: CartRepository;
@@ -39,7 +38,7 @@ export class CartService {
 			}
 
 			// Get the user with the id from the x-user-id header
-			const user: TODO = await this.userRepository.getUserById(
+			const user: Users | null = await this.userRepository.getUserById(
 				headers["x-user-id"]
 			);
 
@@ -54,9 +53,9 @@ export class CartService {
 				};
 			}
 
-			const cart: TODO = await this.cartRepository.getCartById(
-				headers["x-user-id"]
-			);
+			// Get the cart with the id from the x-user-id header
+			const cart: Record<string, any> | null =
+				await this.cartRepository.getCartById(headers["x-user-id"]);
 
 			// Response if searched cart does not exist or is already deleted
 			if (!cart) {
@@ -64,15 +63,19 @@ export class CartService {
 				const id: string = uuidv4();
 
 				// Create cart and save it to database
-				const newCart = await this.cartRepository.addNewCart({
-					id,
-					user_id: headers["x-user-id"],
-					is_deleted: false,
-				});
+				const newCart: Carts | null =
+					await this.cartRepository.addNewCart({
+						id,
+						user_id: headers["x-user-id"],
+						is_deleted: false,
+					});
 
 				return {
 					response: {
-						data: { cart: { id: newCart.id, items: [] }, total: 0 },
+						data: {
+							cart: { id: newCart?.id, items: [] },
+							total: 0,
+						},
 						error: null,
 					},
 					code: 200,
@@ -80,15 +83,18 @@ export class CartService {
 			}
 
 			// Calculate total cost of the cart
-			const totalCost: TODO = cart?.items.reduce(
-				(acc: TODO, item: TODO) => {
+			const totalCost: number = cart?.items.reduce(
+				(acc: number, item: Record<string, any>) => {
 					return acc + item.product.price * item.count;
 				},
 				0
 			);
 
 			// Create data object
-			const cartResponse = { cart, total: totalCost };
+			const cartResponse: Record<string, any> = {
+				cart,
+				total: totalCost,
+			};
 
 			return { response: { data: cartResponse, error: null }, code: 200 };
 		} catch (error) {
@@ -141,7 +147,7 @@ export class CartService {
 			}
 
 			// Get the user with the id from the x-user-id header
-			const user: TODO = await this.userRepository.getUserById(
+			const user: Users | null = await this.userRepository.getUserById(
 				headers["x-user-id"]
 			);
 
@@ -156,9 +162,8 @@ export class CartService {
 				};
 			}
 
-			let cart: TODO = await this.cartRepository.getCartById(
-				headers["x-user-id"]
-			);
+			let cart: Record<string, any> | null =
+				await this.cartRepository.getCartById(headers["x-user-id"]);
 
 			// Response if searched cart does not exist or is already deleted
 			if (!cart) {
@@ -172,8 +177,9 @@ export class CartService {
 			}
 
 			// Get the product to update from the user cart
-			const selectedProduct: TODO = cart.items.find(
-				(item: TODO) => item.product.id === body.productId
+			const selectedProduct: Record<string, any> = cart.items.find(
+				(item: Record<string, any>) =>
+					item.product.id === body.productId
 			);
 
 			// Add product to cart if product on request body does not exist on cart
@@ -191,7 +197,7 @@ export class CartService {
 				}
 
 				// Get product based on its id
-				const productToAdd =
+				const productToAdd: Products | null =
 					await this.productsRepository.getProductById(
 						body.productId
 					);
@@ -211,7 +217,7 @@ export class CartService {
 				if (productToAdd) {
 					const id: string = uuidv4();
 
-					const cartItemToAdd = {
+					const cartItemToAdd: Record<string, any> = {
 						id,
 						count: body.count,
 						cart_id: cart.id,
@@ -238,15 +244,18 @@ export class CartService {
 			cart = await this.cartRepository.getCartById(headers["x-user-id"]);
 
 			// Calculate total cost of the cart
-			const totalCost: TODO = cart?.items.reduce(
-				(acc: TODO, item: TODO) => {
+			const totalCost: number = cart?.items.reduce(
+				(acc: number, item: Record<string, any>) => {
 					return acc + item.product.price * item.count;
 				},
 				0
 			);
 
 			// Create data object
-			const cartResponse = { cart, total: totalCost };
+			const cartResponse: Record<string, any> = {
+				cart,
+				total: totalCost,
+			};
 
 			return { response: { data: cartResponse, error: null }, code: 200 };
 		} catch (error) {
@@ -276,7 +285,7 @@ export class CartService {
 			}
 
 			// Get the user with the id from the x-user-id header
-			const user: TODO = await this.userRepository.getUserById(
+			const user: Users | null = await this.userRepository.getUserById(
 				headers["x-user-id"]
 			);
 
@@ -289,9 +298,9 @@ export class CartService {
 				};
 			}
 
-			const cart: TODO = await this.cartRepository.getCartById(
-				headers["x-user-id"]
-			);
+			// Get the cart with the id from the x-user-id header
+			const cart: Record<string, any> | null =
+				await this.cartRepository.getCartById(headers["x-user-id"]);
 
 			// Response if searched cart does not exist or is already deleted
 			if (!cart) {
@@ -302,6 +311,7 @@ export class CartService {
 				};
 			}
 
+			// Delete cart
 			await this.cartRepository.deleteCart(user.id);
 
 			return {

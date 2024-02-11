@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { CartRepository } from "../repositories/cart.repository";
 import { UserRepository } from "../repositories/user.repository";
 import { OrderRepository } from "../repositories/order.repository";
-import { TODO } from "../schemas/Todo";
+import { Users } from "../entity/Users";
 
 export class OrderService {
 	private cartRepository: CartRepository;
@@ -35,7 +35,7 @@ export class OrderService {
 			}
 
 			// Get the user with the id from the x-user-id header
-			const user: TODO = await this.userRepository.getUserById(
+			const user: Users | null = await this.userRepository.getUserById(
 				headers["x-user-id"]
 			);
 
@@ -48,9 +48,9 @@ export class OrderService {
 				};
 			}
 
-			const cart: TODO = await this.cartRepository.getCartById(
-				headers["x-user-id"]
-			);
+			// Get cart with the id from the x-user-id header
+			const cart: Record<string, any> | null =
+				await this.cartRepository.getCartById(headers["x-user-id"]);
 
 			// Response if searched cart does not exist or is already deleted
 			if (!cart) {
@@ -72,13 +72,14 @@ export class OrderService {
 
 			// Calculate total cost of the order
 			const totalCost: number = cart?.items.reduce(
-				(acc: TODO, item: TODO) => {
+				(acc: number, item: Record<string, any>) => {
 					return acc + item.product.price * item.count;
 				},
 				0
 			);
 
-			const orderToAdd: TODO = {
+			// Create object to add order to database
+			const orderToAdd: Record<string, any> = {
 				id: uuidv4(),
 				user_id: user.id,
 				cart_id: cart.id,
@@ -93,9 +94,11 @@ export class OrderService {
 				total: totalCost,
 			};
 
+			// Add order to database
 			await this.orderRepository.addOrder(orderToAdd);
 
-			await cart.items.map((item: TODO) =>
+			// Add order items to database
+			await cart.items.map((item: Record<string, any>) =>
 				this.orderRepository.addOrderItem({
 					id: uuidv4(),
 					order_id: orderToAdd.id,
@@ -105,7 +108,7 @@ export class OrderService {
 			);
 
 			// Construct order object for response
-			const orderResponse: TODO = {
+			const orderResponse: Record<string, any> = {
 				id: orderToAdd.id,
 				userId: user.id,
 				cartId: cart.id,
