@@ -1,0 +1,55 @@
+[
+	{
+		"id": "fc7cbf1b-549c-4beb-94cf-9750d71edccb",
+		"userId": "2dbf4f76-4b1d-4997-a3db-fd851922c79a",
+		"isDeleted": false,
+		"items": [
+			{
+				"product": {
+					"id": "51422fcd-0366-4186-ad5b-c23059b6f64f",
+					"title": "Book",
+					"description": "A very interesting book",
+					"price": 100
+				},
+				"count": 2
+			}
+		]
+	},
+	{
+		"id": "cc843eee-a14a-4caa-97ee-d4d671904076",
+		"userId": "69b5b67d-9354-4fe7-b4ae-956248ad4171",
+		"isDeleted": false,
+		"items": [
+			{
+				"product": {
+					"id": "625330de-1477-5297-be6c-d3416ac70750",
+					"title": "Spoon",
+					"description": "A very nice spoon",
+					"price": 50
+				},
+				"count": 3
+			},
+			{
+				"product": {
+					"id": "40311ebc-f255-3075-9c4a-b12f48a5e53e",
+					"title": "Cup",
+					"description": "A very beautiful cup",
+					"price": 150
+				},
+				"count": 1
+			}
+		]
+	},
+	{
+		"id": "33975181-83ab-4da0-8aa8-e50a32e3b983",
+		"userId": "1181b317-003e-47d0-b232-9cf60e2a875d",
+		"isDeleted": false,
+		"items": []
+	},
+	{
+		"id": "89f89659-aa43-4037-89b7-a177707a44bc",
+		"userId": "1181b317-003e-47d0-b232-9cf60e2a875d",
+		"isDeleted": true,
+		"items": []
+	}
+]

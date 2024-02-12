@@ -1,0 +1,26 @@
+[
+	{
+		"id": "2dbf4f76-4b1d-4997-a3db-fd851922c79a",
+		"email": "anna@gmail.com",
+		"role": "admin",
+		"password": "password"
+	},
+	{
+		"id": "69b5b67d-9354-4fe7-b4ae-956248ad4171",
+		"email": "jose@gmail.com",
+		"role": "admin",
+		"password": "1234"
+	},
+	{
+		"id": "1181b317-003e-47d0-b232-9cf60e2a875d",
+		"email": "maria@gmail.com",
+		"role": "admin",
+		"password": "qwerty"
+	},
+	{
+		"id": "dda6d169-8350-4d27-bd68-465c5b3b4440",
+		"email": "test@gmail.com",
+		"role": "password",
+		"password": "qwerty"
+	}
+]
